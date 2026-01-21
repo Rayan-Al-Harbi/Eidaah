@@ -11,13 +11,13 @@ An intelligent tool for analyzing presentations using AI, designed to simplify u
 
 -  **File Support**: Upload PDF and PPTX presentations
 
- -   * *AI Analysis * *: Get analytical explanations for each slide
+ -    *AI Analysis* : Get analytical explanations for each slide
 
- -   * *Real Examples * *: Receive practical, real-world examples
+ -    *Real Examples* : Receive practical, real-world examples
 
- -   * *Bilingual * *: Full Arabic and English support
+ -   *Bilingual* : Full Arabic and English support
 
- -   * *Fast Processing * *: Quick analysis powered by Qwen AI model
+ -   *Fast Processing*: Quick analysis powered by Qwen AI model
 
 
 
@@ -43,19 +43,19 @@ eidaah/
 
 └── frontend/         # React frontend
 
-&nbsp;   ├── src/
+   ├── src/
 
-&nbsp;   │   ├── pages/    # Upload  & Results pages
+   │   ├── pages/    # Upload  & Results pages
 
-&nbsp;   │   ├── App.js
+   │   ├── App.js
 
-&nbsp;   │   ├── Footer.js
+   │   ├── Footer.js
 
-&nbsp;   │   ├── About.js
+   │   ├── About.js
 
-&nbsp;   │   └── FAQ.js
+   │   └── FAQ.js
 
-&nbsp;   └── package.json
+   └── package.json
 
 ```
 
@@ -77,10 +77,14 @@ eidaah/
 
 
 
- ### Backend Setup
+In the terminal:
+## Step 1: Clone the Repository
+```bash
+git clone https://github.com/EccentricRay/eidaah.git
+cd eidaah
+```
 
-
-
+## Step 2: Backend Setup
 ```bash
 
 cd backend (change backend with the folder path)
@@ -121,17 +125,25 @@ uvicorn main:app --reload --port 8000
 
 The backend will be available at `http://localhost:8000`
 
+⚠️ Important: First run will download the Qwen AI model (~3GB), which takes 5-10 minutes depending on your internet speed. Be patient!
+Expected output:
+```
+Loading optimized model: Qwen/Qwen2-1.5B-Instruct
+Using device: cpu
+✅ Model loaded successfully!
+INFO: Uvicorn running on http://127.0.0.1:8000
+```
 
 
  * *Note: * * First run will download the AI model (~3GB), which takes 5-10 minutes.
 
 
 
- ### Frontend Setup
+## Step 3: Frontend Setup
 
 
 
-open another terminal:
+Open another terminal (keep backend running):
 
 ```bash
 
@@ -163,7 +175,7 @@ The frontend will be available at `http://localhost:3000`
 
 
 
- ##  Technology Stack
+ ##  Tech Stack
 
 
 
@@ -197,27 +209,27 @@ The frontend will be available at `http://localhost:3000`
 
 
 
- * *Enjaz Club - AI Team * *  
+*Enjaz Club - AI Team*  
 
 Imam Muhammad ibn Saud Islamic University
 
 
 
- -  * *Club Leader * *: Layan Al-Mutaiwie
+ -  *Club Leader*: Layan Al-Mutaiwie
 
- -  * *Project Manager * *: Turki Al-Dajani
+ -  *Project Manager*: Turki Al-Dajani
 
- -  * *Team Lead  & AI/NLP Engineer * *: Rayan Al-Harbi
+ -  *Team Lead  & AI/NLP Engineer*: Rayan Al-Harbi
 
- -  * *UI/UX Design * *: Nahid Al-Mutairi, Layan Al-Qabbani
+ -  *UI/UX Design*: Nahid Al-Mutairi, Layan Al-Qabbani
 
- -  * *Frontend * *: Abdulaziz Al-Dhaif, Raseel Al-Samaani
+ -  *Frontend*: Abdulaziz Al-Dhaif, Raseel Al-Samaani
 
- -  * *Backend * *: Abdulaziz Al-Qahtani, Sultan Al-Rajeh
+ -  *Backend*: Abdulaziz Al-Qahtani, Sultan Al-Rajeh
 
- -  * *AI/NLP Engineers * *: Ziyad Al-Moneef, Yasser Al-Shareef
+ -  *AI/NLP Engineers*: Ziyad Al-Moneef, Yasser Al-Shareef
 
- -  * *QA * *: Faisal Al-Tuwaijri
+ -  *QA*: Faisal Al-Tuwaijri
 
 
 
@@ -247,5 +259,5 @@ For inquiries about this project, please reach out through Imam Muhammad ibn Sau
 
 
 
-  *Made by ambitious students leveraging AI to serve knowledge* 
+   *Made by ambitious students leveraging AI to serve knowledge* 
 
