@@ -247,5 +247,5 @@ For inquiries about this project, please reach out through Imam Muhammad ibn Sau
 
 
 
- * *Made by ambitious students leveraging AI to serve knowledge * *
+  *Made by ambitious students leveraging AI to serve knowledge* 
 
