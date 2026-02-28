@@ -1,110 +1,123 @@
+# Model.py
+# AI Model Integration - Groq API (Llama 3.3 70B)
+# Replaces local Qwen2-1.5B with Groq cloud API
+# Free tier, no regional restrictions, blazing fast inference
+
 import os
-import torch
-import gradio as gr
-from typing import List
-from langchain_community.document_loaders import PyPDFLoader
-from langchain_core.documents import Document
-from pptx import Presentation
-from difflib import SequenceMatcher
-from transformers import pipeline, AutoTokenizer, AutoModelForCausalLM
-import warnings
+from openai import OpenAI
+from dotenv import load_dotenv
 
-warnings.filterwarnings("ignore")
+load_dotenv()
 
-# Load fast Qwen model on CPU or GPU
-def get_llm():
-    model_name = "Qwen/Qwen2-1.5B-Instruct"
-    print(f"Loading optimized model: {model_name}")
+# ---------------------
+# Configuration
+# ---------------------
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+MODEL_NAME = "llama-3.3-70b-versatile"  # Production model, great Arabic support
 
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-    print(f"Using device: {device}")
-
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
-
-    # ✅ FIX: Conditional device_map based on available device
-    if device == "cuda":
-        model = AutoModelForCausalLM.from_pretrained(
-            model_name,
-            device_map={"": 0}  # GPU: keep whole model on GPU
-        )
-    else:
-        # CPU: Don't use device_map, use standard loading
-        model = AutoModelForCausalLM.from_pretrained(
-            model_name,
-            torch_dtype=torch.float32  # Use full precision on CPU
-        )
-        model = model.to(device)  # Move to CPU explicitly
-
-    pipe = pipeline(
-        "text-generation",
-        model=model,
-        tokenizer=tokenizer,
-        max_new_tokens=60,  
-        do_sample=False,
-        return_full_text=False,
-        device=0 if device == "cuda" else -1  # 0 for GPU, -1 for CPU
+if not GROQ_API_KEY:
+    print("⚠️  WARNING: GROQ_API_KEY not found in .env file!")
+    print("   Get a free key at: https://console.groq.com/keys")
+    print("   Then add it to your .env file: GROQ_API_KEY=your_key_here")
+    print("   The server will start, but AI analysis will not work.\n")
+    client = None
+else:
+    client = OpenAI(
+        api_key=GROQ_API_KEY,
+        base_url="https://api.groq.com/openai/v1",
     )
-
-    return pipe, tokenizer
-
-# Initialize model globally
-print("Initializing AI model... This may take a few minutes on first run.")
-llm_pipe, llm_tokenizer = get_llm()
-print("✅ Model loaded successfully!")
+    print(f"✅ Groq AI model configured successfully! (using {MODEL_NAME})")
 
 
-# Universal Loader for PDF/PPTX
-def load_document(file_path: str) -> List[Document]:
-    ext = os.path.splitext(file_path)[1].lower()
-    try:
-        if ext == ".pdf":
-            loader = PyPDFLoader(file_path)
-            return loader.load()
-        elif ext == ".pptx":
-            prs = Presentation(file_path)
-            slides = []
-            for i, slide in enumerate(prs.slides):
-                text = "\n".join(
-                    shape.text for shape in slide.shapes if hasattr(shape, "text")
-                )
-                slides.append(Document(page_content=text.strip(), metadata={"page": i + 1}))
-            return slides
-        else:
-            return []
-    except Exception as e:
-        print(f"Error loading document: {e}")
-        return []
+# ---------------------
+# System Prompts
+# ---------------------
+SYSTEM_PROMPT = """You are "Eidaah" (إيضاح), an expert educational assistant for university students.
+You help students understand presentation slides clearly and thoroughly.
 
-# (MAIN METHOD) Two-step generation
+LANGUAGE RULES (VERY IMPORTANT):
+- If the slide text is in Arabic, you MUST respond ENTIRELY in Arabic.
+- If the slide text is in English, you MUST respond ENTIRELY in English.
+- If the text is mixed, respond in the dominant language.
+- Never mix languages in your response."""
+
+EXPLANATION_PROMPT = """Analyze and explain this presentation slide content clearly and concisely.
+Focus on making complex concepts easy to understand for a university student.
+Write 2-4 sentences maximum.
+
+Slide content:
+{text}"""
+
+EXAMPLE_PROMPT = """Based on this slide content, give ONE concrete, practical real-world example 
+that illustrates the main concept. Keep it brief (2-3 sentences max).
+Make it relatable to university students.
+
+Slide content:
+{text}"""
+
+
+# ---------------------
+# Helper: Call Groq API
+# ---------------------
+def _call_groq(prompt: str, max_tokens: int = 300, temperature: float = 0.3) -> str:
+    """Make a single call to the Groq API."""
+    response = client.chat.completions.create(
+        model=MODEL_NAME,
+        messages=[
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user", "content": prompt},
+        ],
+        max_tokens=max_tokens,
+        temperature=temperature,
+    )
+    return response.choices[0].message.content.strip()
+
+
+# ---------------------
+# Main Generation Function
+# (Same signature as before — ai_logic.py calls this directly)
+# ---------------------
 def generate_explanation_and_example(text: str):
+    """
+    Takes slide text, returns (explanation, example).
+    This is the ONLY function ai_logic.py calls — signature preserved.
+    """
     if not text.strip():
         return "No text found on this slide.", "No example available."
+
+    if not client:
+        return (
+            "AI model is not configured. Please add GROQ_API_KEY to the .env file.",
+            "Visit https://console.groq.com/keys to get a free API key."
+        )
+
     try:
-        # Step 1 – Explanation
-        explain_prompt = f"""Analyze and explain this presentation slide content clearly and concisely:
+        # Step 1 — Generate explanation
+        explanation = _call_groq(
+            EXPLANATION_PROMPT.format(text=text),
+            max_tokens=300,
+            temperature=0.3,
+        )
 
-{text}
-
-Provide a brief 2-3 sentence explanation of what this slide is about."""
-        messages = [{"role": "user", "content": explain_prompt}]
-        formatted_prompt = llm_tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
-        explanation = llm_pipe(formatted_prompt, max_new_tokens=80)[0]["generated_text"].strip().lstrip(': \n')
-
-        # Step 2 – Example
-        example_prompt = f"""Based on this topic: {text[:200]}
-
-Give ONE concrete, practical example that illustrates this concept. Keep it brief and specific."""
-        example_messages = [{"role": "user", "content": example_prompt}]
-        formatted_example_prompt = llm_tokenizer.apply_chat_template(example_messages, tokenize=False, add_generation_prompt=True)
-        example = llm_pipe(formatted_example_prompt, max_new_tokens=60)[0]["generated_text"].strip().lstrip(': \n')
-
-        # Prevent copy-paste repetition
-        similarity = SequenceMatcher(None, explanation.lower(), example.lower()).ratio()
-        if similarity > 0.8:
-            example = "Example: (could not generate a unique one). Try a different slide."
+        # Step 2 — Generate example
+        example = _call_groq(
+            EXAMPLE_PROMPT.format(text=text[:500]),
+            max_tokens=200,
+            temperature=0.5,
+        )
 
         return explanation, example
-        
+
     except Exception as e:
-        print(f"Error in generate_explanation_and_example: {e}")
-        return f"Error: {e}", ""
+        error_msg = str(e)
+        print(f"❌ Groq API Error: {error_msg}")
+
+        # Handle common errors with helpful messages
+        if "401" in error_msg or "invalid" in error_msg.lower():
+            return "Invalid API key. Please check your GROQ_API_KEY.", ""
+        elif "429" in error_msg or "rate" in error_msg.lower():
+            return "Rate limit reached. Please wait a moment and try again.", ""
+        elif "503" in error_msg or "unavailable" in error_msg.lower():
+            return "AI service temporarily unavailable. Please try again in a moment.", ""
+        else:
+            return f"Error generating analysis: {error_msg}", ""

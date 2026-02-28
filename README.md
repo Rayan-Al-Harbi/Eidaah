@@ -1,28 +1,27 @@
-\# إيضاح (Eidaah) - AI Presentation Explainer
 
 
+# (Eidaah) إيضاح  - AI Presentation Explainer
 
 An intelligent tool for analyzing presentations using AI, designed to simplify understanding for students and support presenters.
 
 
-
-\##  Features
-
-
-
-\-  \*\*File Support\*\*: Upload PDF and PPTX presentations
-
-\-  \*\*AI Analysis\*\*: Get analytical explanations for each slide
-
-\-  \*\*Real Examples\*\*: Receive practical, real-world examples
-
-\-  \*\*Bilingual\*\*: Full Arabic and English support
-
-\-  \*\*Fast Processing\*\*: Quick analysis powered by Qwen AI model
+##  Features
 
 
 
-\##  Project Structure
+-  **File Support**: Upload PDF and PPTX presentations
+
+ -    *AI Analysis* : Get analytical explanations for each slide
+
+ -    *Real Examples* : Receive practical, real-world examples
+
+ -   *Bilingual* : Full Arabic and English support
+
+ -   *Fast Processing*: Quick analysis powered by Qwen AI model
+
+
+
+ ##  Project Structure
 
 
 
@@ -34,7 +33,7 @@ eidaah/
 
 │   ├── main.py       # API endpoints
 
-│   ├── ai\_logic.py   # File processing logic
+│   ├── ai _logic.py   # File processing logic
 
 │   ├── Model.py      # AI model integration
 
@@ -44,75 +43,79 @@ eidaah/
 
 └── frontend/         # React frontend
 
-&nbsp;   ├── src/
+   ├── src/
 
-&nbsp;   │   ├── pages/    # Upload \& Results pages
+   │   ├── pages/    # Upload  & Results pages
 
-&nbsp;   │   ├── App.js
+   │   ├── App.js
 
-&nbsp;   │   ├── Footer.js
+   │   ├── Footer.js
 
-&nbsp;   │   ├── About.js
+   │   ├── About.js
 
-&nbsp;   │   └── FAQ.js
+   │   └── FAQ.js
 
-&nbsp;   └── package.json
+   └── package.json
 
 ```
 
 
 
-\##  Local Setup
+ ##  Local Setup
 
 
 
-\### Prerequisites
+ ### Prerequisites
 
 
 
-\- Python 3.9+
+ - Python 3.9+
 
-\- Node.js 16+
+ - Node.js 16+
 
-\- npm or yarn
-
-
-
-\### Backend Setup
+ - npm or yarn
 
 
 
+In the terminal:
+## Step 1: Clone the Repository
+```bash
+git clone https://github.com/EccentricRay/eidaah.git
+cd eidaah
+```
+
+## Step 2: Backend Setup
 ```bash
 
 cd backend (change backend with the folder path)
 
 
 
-\# Create virtual environment
+ # Create virtual environment
 
 python -m venv venv
 
 
 
-\# Activate virtual environment
+ # Activate virtual environment
 
-\# Windows:
+ # Windows:
 
-venv\\Scripts\\activate
+venv  Scripts  activate
 
-\# Mac/Linux:
+ # Mac/Linux:
 
 source venv/bin/activate
 
 
 
-\# Install dependencies
+ # Install dependencies
 
 pip install -r requirements.txt
 
 
 
-\# Run server on terminal
+ # Run server on terminal
 
 uvicorn main:app --reload --port 8000
 
@@ -122,17 +125,25 @@ uvicorn main:app --reload --port 8000
 
 The backend will be available at `http://localhost:8000`
 
+⚠️ Important: First run will download the Qwen AI model (~3GB), which takes 5-10 minutes depending on your internet speed. Be patient!
+Expected output:
+```
+Loading optimized model: Qwen/Qwen2-1.5B-Instruct
+Using device: cpu
+✅ Model loaded successfully!
+INFO: Uvicorn running on http://127.0.0.1:8000
+```
 
 
-\*\*Note:\*\* First run will download the AI model (~3GB), which takes 5-10 minutes.
+ * *Note: * * First run will download the AI model (~3GB), which takes 5-10 minutes.
 
 
 
-\### Frontend Setup
+## Step 3: Frontend Setup
 
 
 
-open another terminal:
+Open another terminal (keep backend running):
 
 ```bash
 
@@ -140,19 +151,19 @@ cd frontend (change frontend with the folder path)
 
 
 
-\# Create .env.local file
+ # Create .env.local file
 
-echo "REACT\_APP\_API\_URL=http://localhost:8000" > .env.local
+echo "REACT _APP _API _URL=http://localhost:8000" > .env.local
 
 
 
-\# Install dependencies
+ # Install dependencies
 
 npm install
 
 
 
-\# Start development server
+ # Start development server
 
 npm start
 
@@ -164,65 +175,65 @@ The frontend will be available at `http://localhost:3000`
 
 
 
-\##  Technology Stack
+ ##  Tech Stack
 
 
 
-\### Backend
+ ### Backend
 
-\- FastAPI - Web framework
+ - FastAPI - Web framework
 
-\- Qwen 2 (1.5B) - AI language model
+ - Qwen 2 (1.5B) - AI language model
 
-\- PyTorch - ML framework
+ - PyTorch - ML framework
 
-\- pdfplumber - PDF processing
+ - pdfplumber - PDF processing
 
-\- python-pptx - PowerPoint processing
-
-
-
-\### Frontend
-
-\- React - UI framework
-
-\- React Router - Navigation
-
-\- Cairo Font - Arabic typography
-
-\- Tailwind CSS - Styling
+ - python-pptx - PowerPoint processing
 
 
 
-\## 👥 Team
+ ### Frontend
+
+ - React - UI framework
+
+ - React Router - Navigation
+
+ - Cairo Font - Arabic typography
+
+ - Tailwind CSS - Styling
 
 
 
-\*\*Enjaz Club - AI Team\*\*  
+ ## 👥 Team
+
+
+
+*Enjaz Club - AI Team*  
 
 Imam Muhammad ibn Saud Islamic University
 
 
 
-\- \*\*Club Leader\*\*: Layan Al-Mutaiwie
+ -  *Club Leader*: Layan Al-Mutaiwie
 
-\- \*\*Project Manager\*\*: Turki Al-Dajani
+ -  *Project Manager*: Turki Al-Dajani
 
-\- \*\*Team Lead \& AI/NLP Engineer\*\*: Rayan Al-Harbi
+ -  *Team Lead  & AI/NLP Engineer*: Rayan Al-Harbi
 
-\- \*\*UI/UX Design\*\*: Nahid Al-Mutairi, Layan Al-Qabbani
+ -  *UI/UX Design*: Nahid Al-Mutairi, Layan Al-Qabbani
 
-\- \*\*Frontend\*\*: Abdulaziz Al-Dhaif, Raseel Al-Samaani
+ -  *Frontend*: Abdulaziz Al-Dhaif, Raseel Al-Samaani
 
-\- \*\*Backend\*\*: Abdulaziz Al-Qahtani, Sultan Al-Rajeh
+ -  *Backend*: Abdulaziz Al-Qahtani, Sultan Al-Rajeh
 
-\- \*\*AI/NLP Engineers\*\*: Ziyad Al-Moneef, Yasser Al-Shareef
+ -  *AI/NLP Engineers*: Ziyad Al-Moneef, Yasser Al-Shareef
 
-\- \*\*QA\*\*: Faisal Al-Tuwaijri
+ -  *QA*: Faisal Al-Tuwaijri
 
 
 
-\## License
+ ## License
 
 
 
@@ -230,7 +241,7 @@ This project is a student initiative developed by the Enjaz Club AI Team.
 
 
 
-\## Contributing
+ ## Contributing
 
 
 
@@ -238,7 +249,7 @@ This is a closed student project. For questions or feedback, please contact the 
 
 
 
-\##  Contact
+ ##  Contact
 
 
 
@@ -248,5 +259,5 @@ For inquiries about this project, please reach out through Imam Muhammad ibn Sau
 
 
 
-\*\*Made by ambitious students leveraging AI to serve knowledge\*\*
+   *Made by ambitious students leveraging AI to serve knowledge* 
 
