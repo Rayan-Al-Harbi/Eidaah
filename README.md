@@ -1,263 +1,150 @@
-
-
 # (Eidaah) إيضاح  - AI Presentation Explainer
 
-An intelligent tool for analyzing presentations using AI, designed to simplify understanding for students and support presenters.
+An intelligent tool for analyzing presentations using AI, designed to simplify understanding.
 
 
-##  Features
+<img width="939" height="921" alt="Screenshot 2026-01-22 001844" src="https://github.com/user-attachments/assets/b250704e-da85-4861-9149-9d1a20507e81" />
 
 
+## Features
 
--  **File Support**: Upload PDF and PPTX presentations
+* **File Support**: Upload PDF and PPTX presentations
+* **AI Analysis**: Get analytical explanations for each slide
+* **Topic Detection**: Automatically detects 2–6 main topics from the presentation using LLM
+* **Real Examples**: Receive practical, real-world examples per slide or topic
+* **Presentation Summary**: Global AI-generated summary of the full presentation
+* **Bilingual**: Full Arabic and English support
+* **Fast Processing**: Powered by Llama 3.3 70B via Groq API
 
- -    *AI Analysis* : Get analytical explanations for each slide
-
- -    *Real Examples* : Receive practical, real-world examples
-
- -   *Bilingual* : Full Arabic and English support
-
- -   *Fast Processing*: Quick analysis powered by Qwen AI model
-
-
-
- ##  Project Structure
-
-
+## Project Structure
 
 ```
-
 eidaah/
-
-├── backend/          # FastAPI backend
-
-│   ├── main.py       # API endpoints
-
-│   ├── ai _logic.py   # File processing logic
-
-│   ├── Model.py      # AI model integration
-
-│   └── requirements.txt
-
+├── backend/
+│   ├── main.py             # API endpoints & background pipeline
+│   ├── ai_logic.py         # File validation & text extraction (PDF/PPTX)
+│   ├── Model.py            # Groq API client (call_groq)
+│   ├── session_store.py    # In-memory session management
+│   ├── chunker.py          # Slide text chunking
+│   ├── topic_detector.py   # LLM-based topic detection
+│   ├── rag_generator.py    # Topic & summary generation
+│   ├── slide_renderer.py   # Slide-to-image rendering (PDF/PPTX)
+│   ├── requirements.txt
+│   ├── .env.example
+│   └── Dockerfile
 │
-
-└── frontend/         # React frontend
-
-   ├── src/
-
-   │   ├── pages/    # Upload  & Results pages
-
-   │   ├── App.js
-
-   │   ├── Footer.js
-
-   │   ├── About.js
-
-   │   └── FAQ.js
-
-   └── package.json
-
+└── frontend/
+    ├── src/
+    │   ├── pages/          # Upload & Results pages
+    │   ├── App.js
+    │   ├── Footer.js
+    │   ├── About.js
+    │   └── FAQ.js
+    └── package.json
 ```
 
+## Local Setup
 
+### Prerequisites
 
- ##  Local Setup
+* Python 3.9+
+* Node.js 16+
+* npm
+* A free Groq API key ([get one here](https://console.groq.com/keys))
 
+### Step 1: Clone the Repository
 
-
- ### Prerequisites
-
-
-
- - Python 3.9+
-
- - Node.js 16+
-
- - npm or yarn
-
-
-
-In the terminal:
-## Step 1: Clone the Repository
 ```bash
-git clone https://github.com/EccentricRay/eidaah.git
-cd eidaah
+git clone https://github.com/Rayan-Al-Harbi/Eidaah.git
+cd Eidaah
 ```
 
-## Step 2: Backend Setup
+### Step 2: Backend Setup
+
 ```bash
+cd backend
 
-cd backend (change backend with the folder path)
-
-
-
- # Create virtual environment
-
+# Create and activate virtual environment
 python -m venv venv
 
-
-
- # Activate virtual environment
-
- # Windows:
-
-venv  Scripts  activate
-
- # Mac/Linux:
-
+# Windows:
+venv\Scripts\activate
+# Mac/Linux:
 source venv/bin/activate
 
-
-
- # Install dependencies
-
+# Install dependencies
 pip install -r requirements.txt
 
+# Set up environment variables
+# Windows:
+copy .env.example .env
+# Mac/Linux:
+cp .env.example .env
+# Then open .env and set: GROQ_API_KEY=your_api_key_here
 
-
- # Run server on terminal
-
+# Run server
 uvicorn main:app --reload --port 8000
-
 ```
-
-
 
 The backend will be available at `http://localhost:8000`
 
-⚠️ Important: First run will download the Qwen AI model (~3GB), which takes 5-10 minutes depending on your internet speed. Be patient!
 Expected output:
 ```
-Loading optimized model: Qwen/Qwen2-1.5B-Instruct
-Using device: cpu
-✅ Model loaded successfully!
-INFO: Uvicorn running on http://127.0.0.1:8000
+✅ Groq AI model configured successfully! (using llama-3.3-70b-versatile)
+✅ Model.py imported successfully!
+🚀 Eidaah server starting...
+INFO:     Uvicorn running on http://127.0.0.1:8000
 ```
 
-
- * *Note: * * First run will download the AI model (~3GB), which takes 5-10 minutes.
-
-
-
-## Step 3: Frontend Setup
-
-
+### Step 3: Frontend Setup
 
 Open another terminal (keep backend running):
 
 ```bash
+cd frontend
 
-cd frontend (change frontend with the folder path)
+# Create environment file
+echo REACT_APP_API_URL=http://localhost:8000 > .env.local
 
-
-
- # Create .env.local file
-
-echo "REACT _APP _API _URL=http://localhost:8000" > .env.local
-
-
-
- # Install dependencies
-
+# Install dependencies
 npm install
 
-
-
- # Start development server
-
+# Start development server
 npm start
-
 ```
-
-
 
 The frontend will be available at `http://localhost:3000`
 
+## Tech Stack
 
+### Backend
 
- ##  Tech Stack
+* FastAPI — web framework
+* Llama 3.3 70B — AI language model (via Groq API)
+* pdfplumber — PDF text extraction
+* python-pptx — PowerPoint text extraction
+* pdf2image + poppler — slide image rendering (optional)
+* LibreOffice headless — PPTX-to-image conversion (optional)
 
+### Frontend
 
+* React — UI framework
+* React Router — navigation
+* Cairo Font — Arabic typography
 
- ### Backend
+## 👥 Team
 
- - FastAPI - Web framework
+*Enjaz Club - AI Team — Imam Muhammad ibn Saud Islamic University*
 
- - Qwen 2 (1.5B) - AI language model
+* **Club Leader**: Layan Al-Mutaiwie
+* **Team Lead & AI/NLP**: Rayan Al-Harbi
+* **Project Manager & Product Idea**: Turki Al-Dajani
+* **UI/UX Design**: Nahed Al-Mutairi, Layan Al-Qabbani
+* **Frontend**: Abdulaziz Al-Dhaif, Raseel Al-Samaani
+* **Backend**: Abdulaziz Al-Qahtani, Sultan Al-Rajeh
+* **AI/NLP Engineers**: Ziyad Al-Moneef, Yasser Al-Shareef
+* **QA**: Faisal Al-Tuwaijri
 
- - PyTorch - ML framework
+---
 
- - pdfplumber - PDF processing
-
- - python-pptx - PowerPoint processing
-
-
-
- ### Frontend
-
- - React - UI framework
-
- - React Router - Navigation
-
- - Cairo Font - Arabic typography
-
- - Tailwind CSS - Styling
-
-
-
- ## 👥 Team
-
-
-
-*Enjaz Club - AI Team*  
-
-Imam Muhammad ibn Saud Islamic University
-
-
-
- -  *Club Leader*: Layan Al-Mutaiwie
-
- -  *Project Manager*: Turki Al-Dajani
-
- -  *Team Lead  & AI/NLP Engineer*: Rayan Al-Harbi
-
- -  *UI/UX Design*: Nahid Al-Mutairi, Layan Al-Qabbani
-
- -  *Frontend*: Abdulaziz Al-Dhaif, Raseel Al-Samaani
-
- -  *Backend*: Abdulaziz Al-Qahtani, Sultan Al-Rajeh
-
- -  *AI/NLP Engineers*: Ziyad Al-Moneef, Yasser Al-Shareef
-
- -  *QA*: Faisal Al-Tuwaijri
-
-
-
- ## License
-
-
-
-This project is a student initiative developed by the Enjaz Club AI Team.
-
-
-
- ## Contributing
-
-
-
-This is a closed student project. For questions or feedback, please contact the team through the university.
-
-
-
- ##  Contact
-
-
-
-For inquiries about this project, please reach out through Imam Muhammad ibn Saud Islamic University - Enjaz Club.
-
-
-
-
-
-   *Made by ambitious students leveraging AI to serve knowledge* 
-
+*Made by ambitious students leveraging AI to serve knowledge*
